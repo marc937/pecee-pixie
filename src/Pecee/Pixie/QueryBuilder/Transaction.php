@@ -6,21 +6,21 @@ class Transaction extends QueryBuilderHandler
 
     /**
      * Commit the database changes
-     * @throws TransactionHaltException
+     * @throws TransactionCommitHaltException
      */
     public function commit()
     {
         $this->pdo->commit();
-        throw new TransactionHaltException();
+        throw new TransactionCommitHaltException();
     }
 
     /**
      * Rollback the database changes
-     * @throws TransactionHaltException
+     * @throws TransactionRollbackHaltException
      */
     public function rollback()
     {
         $this->pdo->rollBack();
-        throw new TransactionHaltException();
+        throw new TransactionRollbackHaltException();
     }
 }

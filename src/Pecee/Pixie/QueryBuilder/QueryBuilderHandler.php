@@ -830,7 +830,7 @@ class QueryBuilderHandler
      * Runs a transaction
      *
      * @param \Closure $callback
-     * @return static
+     * @return bool
      */
     public function transaction(\Closure $callback)
     {
@@ -848,15 +848,15 @@ class QueryBuilderHandler
             // the closure, commit the changes
             $this->pdo->commit();
 
-            return $this;
-        } catch (TransactionHaltException $e) {
-            // Commit or rollback behavior has been handled in the closure, so exit
-            return $this;
+            return true;
+        } catch (TransactionRollbackHaltException $e) {
+            return false;
+        } catch (TransactionCommitHaltException $e) {
+            return true;
         } catch (\Exception $e) {
             // something happened, rollback changes
             $this->pdo->rollBack();
-
-            return $this;
+            return false;
         }
     }
 
